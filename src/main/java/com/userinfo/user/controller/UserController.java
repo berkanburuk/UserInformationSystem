@@ -5,7 +5,9 @@ import com.userinfo.user.model.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +23,11 @@ public class UserController {
 
     @PostMapping(value = "/save")
     public ResponseEntity<User> save(@RequestBody User user) {
+        String ageLink = "https://api.agify.io/?name=" + user.getName();
+        RestTemplate restTemplate = new RestTemplate();
+        Object result = restTemplate.getForObject(ageLink, Object.class);
+        int age = (int) ((LinkedHashMap) result).get("age");
+        user.setAge(age);
         User createdUser = userService.saveOrUpdateUser(user);
         if (createdUser == null) {
             return ResponseEntity.notFound().build();
@@ -30,11 +37,13 @@ public class UserController {
 
     @PutMapping(value = "/update")
     public ResponseEntity<User> update(@RequestBody User user) {
-        User createdUser = userService.saveOrUpdateUser(user);
-        if (createdUser == null) {
+        Optional<User> foundUser = userService.getUserById(user.getId());
+        if (foundUser.isPresent()){
+            User updatedUser = userService.saveOrUpdateUser(user);
+            return ResponseEntity.ok(updatedUser);
+        }else{
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(createdUser);
     }
 
     @GetMapping(value = "/getAllUsers")
@@ -50,10 +59,10 @@ public class UserController {
     @GetMapping(value = "/getUser/{id}")
     public ResponseEntity<Object> getById(@PathVariable("id") int id) {
         Optional<User> foundUser = userService.getUserById(id);
-        if (!foundUser.isPresent()) {
-            return ResponseEntity.notFound().build();
-        } else {
+        if (foundUser.isPresent()) {
             return ResponseEntity.ok(foundUser.get());
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 
