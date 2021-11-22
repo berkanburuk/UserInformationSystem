@@ -18,25 +18,24 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "/save") @ResponseStatus(HttpStatus.CREATED)
-    public User save(@RequestBody User user) {
-        return userService.saveOrUpdateUser(user);
-    }
+    @PostMapping(value = "/save")
+    @ResponseStatus(HttpStatus.CREATED)
+    public User save(@RequestBody User user) { return userService.saveOrUpdateUser(user); }
 
-    @PutMapping(value = "/update") @ResponseStatus(HttpStatus.OK)
-    public User update(@RequestBody User user) {
-        return userService.getUserById(user.getId());
-    }
+    @PutMapping(value = "/update")
+    @ResponseStatus(HttpStatus.OK)
+    public User update(@RequestBody User user) { return userService.getUserById(user.getId()); }
 
-    @GetMapping(value = "/getAllUsers") @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/getAllUsers")
+    @ResponseStatus(HttpStatus.OK)
     public List<User> getAllUsers() { return userService.getAllUsers(); }
 
-    @GetMapping(value = "/getUser/{id}") @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/getUser/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public User getById(@PathVariable("id") Long id) { return userService.getUserById(id); }
 
-    @DeleteMapping(value = "/delete/{id}") @ResponseStatus(HttpStatus.OK)
-    public void deleteBytId(@PathVariable Long id) {
-        userService.deleteUserById(id);
-    }
+    @DeleteMapping(value = "/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteBytId(@PathVariable Long id) { userService.deleteUserById(id); }
 
 }
