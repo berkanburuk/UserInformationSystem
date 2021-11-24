@@ -1,6 +1,7 @@
 package com.userinfo.user.service.Impl;
 
-import com.userinfo.user.Exception.ElementNotFoundException;
+import com.userinfo.user.exception.BadRequestException;
+import com.userinfo.user.exception.ElementNotFoundException;
 import com.userinfo.user.model.User;
 import com.userinfo.user.service.*;
 import com.userinfo.user.repository.*;
@@ -30,6 +31,9 @@ public class UserServiceImpl implements UserService {
         RestTemplate restTemplate = new RestTemplate();
         Object result = restTemplate.getForObject(ageLink, Object.class);
         int age = (int) ((LinkedHashMap) result).get("age");
+        if (age == 0) {
+            throw new BadRequestException("There should be an age");
+        }
         user.setAge(age);
 
         return userRepository.save(user);

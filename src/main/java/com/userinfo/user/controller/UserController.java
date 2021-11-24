@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost.com", maxAge = 3600)
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
@@ -36,6 +37,6 @@ public class UserController {
 
     @DeleteMapping(value = "/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteBytId(@PathVariable Long id) { userService.deleteUserById(id); }
+    public void deleteById(@PathVariable Long id) { userService.deleteUserById(id); }
 
 }

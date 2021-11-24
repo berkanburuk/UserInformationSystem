@@ -2,7 +2,7 @@ package com.userinfo.user.model;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "user_information")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +18,18 @@ public class User {
     private String phoneNumber;
 
     public User() {
+    }
+
+    public User(String name, String email, int age, String phoneNumber) {
+        this.name = name;
+        this.email = email;
+        this.age = age;
+        this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "User -> " + "\n\tid=" + id + "\n\tname='" + name + "\n\temail='" + email + "\n\tage=" + age + "\n\tphoneNumber='" + phoneNumber;
     }
 
     public Long getId() {
