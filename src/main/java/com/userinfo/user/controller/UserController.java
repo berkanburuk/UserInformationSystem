@@ -21,11 +21,11 @@ public class UserController {
 
     @PostMapping(value = "/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public User save(@RequestBody User user) { return userService.saveOrUpdateUser(user); }
+    public User save(@RequestBody User user) { return userService.saveUser(user); }
 
     @PutMapping(value = "/update")
     @ResponseStatus(HttpStatus.OK)
-    public User update(@RequestBody User user) { return userService.getUserById(user.getId()); }
+    public User update(@RequestBody User user) { return userService.updateUser(user); }
 
     @GetMapping(value = "/getAllUsers")
     @ResponseStatus(HttpStatus.OK)

@@ -8,7 +8,9 @@ import java.util.List;
 
 
 public interface UserService {
-    User saveOrUpdateUser(User user);
+    User saveUser(User user);
+
+    User updateUser(User user);
 
     User getUserById(Long id);
 

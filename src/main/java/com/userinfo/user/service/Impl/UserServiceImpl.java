@@ -25,27 +25,54 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    @Override
-    public User saveOrUpdateUser(User user) {
-        String ageLink = "https://api.agify.io/?name=" + user.getName();
-        RestTemplate restTemplate = new RestTemplate();
-        Object result = restTemplate.getForObject(ageLink, Object.class);
-        int age = (int) ((LinkedHashMap) result).get("age");
-        if (age == 0) {
-            throw new BadRequestException("There should be an age");
-        }
-        user.setAge(age);
 
+    @Override
+    public User saveUser(User user) {
+        if (user.getName() != null && user.getName().trim() != "") {
+            int age = getAge(user.getName());
+            if (age == 0) {
+                throw new BadRequestException("There should be an age");
+            }
+            user.setAge(age);
+        }
         return userRepository.save(user);
     }
 
     @Override
-    public User getUserById(Long id) { return userRepository.findById(id).orElseThrow(()-> new ElementNotFoundException("Could not find user with ID provided")); }
+    public User updateUser(User user) {
+        getUserById(user.getId());
+            if (user.getName() != null && !user.getName().trim().equals("")) {
+                int age = getAge(user.getName());
+                if (age == 0) {
+                    throw new BadRequestException("There should be an age");
+                }
+                user.setAge(age);
+            }else{
+                throw new BadRequestException("There should be a name");
+            }
+            return userRepository.save(user);
+    }
+
+    private int getAge(String name) {
+        String ageLink = "https://api.agify.io/?name=" + name;
+        RestTemplate restTemplate = new RestTemplate();
+        Object result = restTemplate.getForObject(ageLink, Object.class);
+        return (int) ((LinkedHashMap) result).get("age");
+    }
 
     @Override
-    public List<User> getAllUsers() { return userRepository.findAll(); }
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("Could not find user with ID provided"));
+    }
 
     @Override
-    public void deleteUserById(Long id) { userRepository.deleteById(id); }
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
+    }
 
 }
